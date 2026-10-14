@@ -1,0 +1,907 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprende Linking Words con Jorge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .avatar-circle {
+            width: 100%;
+            height: 100%;
+            background: #f0d5b8;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid #764ba2;
+        }
+        
+        .hair {
+            position: absolute;
+            top: 0;
+            left: 20%;
+            width: 60%;
+            height: 40%;
+            background: #2c3e50;
+            border-radius: 50% 50% 0 0;
+        }
+        
+        .eyes {
+            position: absolute;
+            top: 45%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        
+        .eye {
+            width: 12px;
+            height: 12px;
+            background: #000;
+            border-radius: 50%;
+        }
+        
+        .mouth {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 5px;
+            border: 2px solid #c44;
+            background: #c44;
+            border-radius: 10px;
+            transition: all 0.1s;
+        }
+        
+        .avatar-circle.talking .mouth {
+            animation: talk 0.2s infinite;
+        }
+
+        @keyframes talk {
+            0%, 100% { height: 5px; border-radius: 10px; }
+            50% { height: 15px; border-radius: 50%; }
+        }
+        
+        .score {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkmark { color: #22c55e; }
+        .cross { color: #ef4444; }
+        
+        .greeting {
+            background: #334155;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        .audio-text {
+            display: block;
+            font-size: 14px;
+            color: #94a3b8;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-primary:hover {
+            background: #5a3875;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+        
+        .tab.active {
+            color: #764ba2;
+            border-bottom-color: #764ba2;
+        }
+        
+        .content {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .linker-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .linker-card:hover {
+            border-color: #764ba2;
+            transform: translateX(5px);
+        }
+        
+        .linker-word {
+            font-size: 20px;
+            font-weight: bold;
+            color: #764ba2;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .linker-word:hover {
+            text-decoration: underline;
+        }
+        
+        .linker-translation {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .linker-pronunciation {
+            color: #667eea;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            margin-top: 3px;
+        }
+        
+        .linker-example {
+            background: #f1f5f9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-style: italic;
+            color: #475569;
+            border-left: 3px solid #764ba2;
+        }
+        
+        .vocab-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .vocab-word {
+            font-weight: bold;
+            color: #764ba2;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .vocab-meaning {
+            color: #64748b;
+            text-align: right;
+        }
+        
+        .composition-box {
+            background: #f0f4ff;
+            border: 2px solid #764ba2;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .composition-title {
+            color: #764ba2;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .composition-text {
+            line-height: 1.8;
+            color: #334155;
+            text-align: justify;
+        }
+        
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #92400e;
+        }
+        
+        .question-audio {
+            background: #ede9fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #764ba2;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .question-audio:hover {
+            background-color: #ddd6fe;
+        }
+        
+        .option {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        
+        .option:hover { 
+            border-color: #764ba2; 
+            background-color: #f5f3ff;
+        }
+        
+        .option.correct { 
+            background: #dcfce7; 
+            border-color: #22c55e; 
+        }
+        
+        .option.incorrect { 
+            background: #fee2e2; 
+            border-color: #ef4444; 
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .btn-next {
+            width: 100%;
+            padding: 15px;
+            background: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-next:hover {
+            background-color: #16a34a;
+        }
+
+        .btn-back {
+            width: 100%;
+            padding: 10px;
+            background: #64748b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-back:hover {
+            background-color: #475569;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #764ba2;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .result-title {
+            font-size: 24px;
+            color: #334155;
+            margin-bottom: 20px;
+        }
+        
+        .result-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #764ba2;
+            margin-bottom: 20px;
+        }
+        
+        .result-message {
+            font-size: 18px;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+        
+        .info-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .info-box h3 {
+            color: #92400e;
+            margin-bottom: 10px;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            background: #764ba2;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla de Bienvenida -->
+        <div id="welcome-screen">
+            <div class="avatar">
+                <div class="avatar-circle" id="jorge-avatar">
+                    <div class="hair"></div>
+                    <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+                    <div class="mouth"></div>
+                </div>
+            </div>
+            
+            <div class="score">
+                <div class="score-item"><span class="checkmark">✓</span><span id="correct-count">0</span></div>
+                <div class="score-item"><span class="cross">✗</span><span id="incorrect-count">0</span></div>
+            </div>
+            
+            <div class="greeting">
+                ¡Hola! Soy Jorge Ñañez. Hoy aprenderemos los Linking Words o Conectores en inglés.
+                <span class="audio-text">🎧 "Hello! I am Jorge Ñañez. Today we will learn English Linking Words."</span>
+            </div>
+            <button class="btn-primary" onclick="showMenu()">Comenzar Aprendizaje</button>
+        </div>
+
+        <!-- Menú Principal -->
+        <div id="menu-screen" class="section">
+            <h2 style="text-align: center; color: #764ba2; margin-bottom: 20px;">¿Qué quieres aprender hoy?</h2>
+            
+            <button class="btn-primary" onclick="showLinkers()">📚 Ver Linking Words (Conectores)</button>
+            <button class="btn-secondary" onclick="showVocabulary()">🤝 Vocabulario: Resolución de Conflictos</button>
+            <button class="btn-secondary" onclick="showComposition()">📝 ¿Qué es una Composición?</button>
+            <button class="btn-primary" onclick="startPractice()" style="background: #22c55e;">✏️ Practicar Ejercicios</button>
+            <button class="btn-back" onclick="location.reload()">Inicio</button>
+        </div>
+
+        <!-- Pantalla de Linking Words -->
+        <div id="linkers-screen" class="section">
+            <h2 style="text-align: center; color: #764ba2; margin-bottom: 20px;">Linking Words / Conectores</h2>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="showLinkerType('sequence')">Secuencia</button>
+                <button class="tab" onclick="showLinkerType('addition')">Adición</button>
+                <button class="tab" onclick="showLinkerType('contrast')">Contraste</button>
+                <button class="tab" onclick="showLinkerType('reason')">Razón</button>
+                <button class="tab" onclick="showLinkerType('result')">Resultado</button>
+                <button class="tab" onclick="showLinkerType('example')">Ejemplo</button>
+                <button class="tab" onclick="showLinkerType('opinion')">Opinión</button>
+                <button class="tab" onclick="showLinkerType('summary')">Resumen</button>
+            </div>
+            
+            <div id="linkers-content" class="content"></div>
+            
+            <button class="btn-primary" onclick="showMenu()">Volver al Menú</button>
+        </div>
+
+        <!-- Pantalla de Vocabulario -->
+        <div id="vocabulary-screen" class="section">
+            <h2 style="text-align: center; color: #764ba2; margin-bottom: 10px;">Vocabulario: Resolución de Conflictos</h2>
+            <p style="text-align: center; color: #64748b; margin-bottom: 20px;">Conflict Resolution in the Classroom</p>
+            
+            <div class="content" id="vocabulary-content"></div>
+            
+            <button class="btn-primary" onclick="showMenu()">Volver al Menú</button>
+        </div>
+
+        <!-- Pantalla de Composición -->
+        <div id="composition-screen" class="section">
+            <h2 style="text-align: center; color: #764ba2; margin-bottom: 20px;">¿Qué es una Composición?</h2>
+            
+            <div class="info-box">
+                <h3>📖 Definición</h3>
+                <p>Una <strong>composición</strong> (composition) es un texto escrito que expresa ideas de manera organizada y coherente. En inglés, las composiciones necesitan <strong>linking words</strong> (conectores) para unir oraciones y párrafos de forma lógica.</p>
+            </div>
+            
+            <div class="composition-box">
+                <div class="composition-title">Ejemplo de Composición: "My Best Friend"</div>
+                <div class="composition-text">
+                    <p><span class="highlight">First of all</span>, I want to introduce my best friend, Maria. <span class="highlight">In addition</span>, she is very kind and helpful. <span class="highlight">However</span>, sometimes we have different opinions. <span class="highlight">For example</span>, last week we disagreed about a group project. <span class="highlight">As a result</span>, we decided to talk and find a solution. <span class="highlight">In conclusion</span>, good friends always solve their problems together.</p>
+                </div>
+            </div>
+            
+            <div class="info-box" style="background: #e0f2fe; border-left-color: #0ea5e9;">
+                <h3>💡 Consejo del Profe Jorge</h3>
+                <p>Los conectores son como pegamento para tus ideas. Sin ellos, el texto es una lista de oraciones sueltas. ¡Con ellos, tus ideas fluyen naturalmente!</p>
+            </div>
+            
+            <button class="btn-primary" onclick="speak('First of all, I want to introduce my best friend, Maria. In addition, she is very kind and helpful. However, sometimes we have different opinions. For example, last week we disagreed about a group project. As a result, we decided to talk and find a solution. In conclusion, good friends always solve their problems together.')">🔊 Escuchar Composición</button>
+            <button class="btn-back" onclick="showMenu()">Volver al Menú</button>
+        </div>
+
+        <!-- Pantalla de Práctica -->
+        <div id="practice-screen" class="section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="progress" style="text-align:center; margin-bottom:10px;"></div>
+            <div id="question-container"></div>
+            <button class="btn-next" id="next-btn" onclick="nextQuestion()">Siguiente Pregunta</button>
+        </div>
+        
+        <!-- Pantalla de Resultados -->
+        <div id="result-screen" class="section">
+            <div class="result-container">
+                <div class="result-title">¡Has completado el cuestionario!</div>
+                <div class="result-score" id="final-score"></div>
+                <div class="result-message" id="result-message"></div>
+                <button class="btn-primary" onclick="location.reload()">Volver al Inicio</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos de Linking Words organizados por categoría
+        const linkingWords = {
+            sequence: [
+                {word: "first / firstly", translation: "primero / primeramente", pronunciation: "/fɜːrst/ /ˈfɜːrstli/", example: "First, we need to understand the problem."},
+                {word: "second / secondly", translation: "segundo / en segundo lugar", pronunciation: "/ˈsekənd/ /ˈsekəndli/", example: "Secondly, we should listen to everyone."},
+                {word: "then", translation: "entonces, luego", pronunciation: "/ðen/", example: "Then, we can find a solution."},
+                {word: "next", translation: "siguiente, después", pronunciation: "/nekst/", example: "Next, we discuss the options."},
+                {word: "after that", translation: "después de eso", pronunciation: "/ˈæftər ðæt/", example: "After that, we vote for the best idea."},
+                {word: "finally", translation: "finalmente", pronunciation: "/ˈfaɪnəli/", example: "Finally, we reach an agreement."}
+            ],
+            addition: [
+                {word: "and", translation: "y", pronunciation: "/ænd/", example: "Tom is smart and helpful."},
+                {word: "also", translation: "también", pronunciation: "/ˈɔːlsoʊ/", example: "She is also very kind."},
+                {word: "in addition", translation: "además", pronunciation: "/ɪn əˈdɪʃn/", example: "In addition, he speaks three languages."},
+                {word: "furthermore", translation: "además, es más", pronunciation: "/ˌfɜːrðərˈmɔːr/", example: "Furthermore, the results were excellent."},
+                {word: "moreover", translation: "además, por otra parte", pronunciation: "/mɔːrˈoʊvər/", example: "Moreover, everyone agreed with the decision."},
+                {word: "as well as", translation: "así como, además de", pronunciation: "/æz wel æz/", example: "She sings as well as dances."},
+                {word: "besides", translation: "además de", pronunciation: "/bɪˈsaɪdz/", example: "Besides, we don't have enough time."}
+            ],
+            contrast: [
+                {word: "but", translation: "pero", pronunciation: "/bʌt/", example: "I like him, but I don't trust him."},
+                {word: "however", translation: "sin embargo", pronunciation: "/haʊˈevər/", example: "However, there is another solution."},
+                {word: "although", translation: "aunque", pronunciation: "/ɔːlˈðoʊ/", example: "Although it was raining, we went out."},
+                {word: "even though", translation: "aun cuando", pronunciation: "/ˈiːvn ðoʊ/", example: "Even though he was tired, he helped us."},
+                {word: "on the other hand", translation: "por otro lado", pronunciation: "/ɒn ði ˈʌðər hænd/", example: "On the other hand, the plan is expensive."},
+                {word: "in contrast", translation: "en contraste", pronunciation: "/ɪn ˈkɒntrɑːst/", example: "In contrast, her sister is very shy."},
+                {word: "nevertheless", translation: "no obstante", pronunciation: "/ˌnevərðəˈles/", example: "Nevertheless, we decided to continue."}
+            ],
+            reason: [
+                {word: "because", translation: "porque", pronunciation: "/bɪˈkɒz/", example: "I stayed home because I was sick."},
+                {word: "since", translation: "ya que, dado que", pronunciation: "/sɪns/", example: "Since it's late, let's go home."},
+                {word: "as", translation: "como, ya que", pronunciation: "/æz/", example: "As you know, I don't like coffee."},
+                {word: "due to", translation: "debido a", pronunciation: "/ˈdjuː tuː/", example: "The match was canceled due to rain."},
+                {word: "owing to", translation: "debido a, gracias a", pronunciation: "/ˈəʊɪŋ tuː/", example: "Owing to his help, we finished early."}
+            ],
+            result: [
+                {word: "so", translation: "así que, por lo tanto", pronunciation: "/soʊ/", example: "It was raining, so I took an umbrella."},
+                {word: "therefore", translation: "por lo tanto", pronunciation: "/ˈðerfɔːr/", example: "Therefore, we must act now."},
+                {word: "as a result", translation: "como resultado", pronunciation: "/æz ə rɪˈzʌlt/", example: "As a result, the project failed."},
+                {word: "consequently", translation: "consecuentemente", pronunciation: "/ˈkɒnsɪkwəntli/", example: "Consequently, he lost his job."},
+                {word: "thus", translation: "así, de este modo", pronunciation: "/ðʌs/", example: "Thus, we solved the problem."}
+            ],
+            example: [
+                {word: "for example", translation: "por ejemplo", pronunciation: "/fɔːr ɪɡˈzɑːmpl/", example: "For example, London is very expensive."},
+                {word: "for instance", translation: "por ejemplo", pronunciation: "/fɔːr ˈɪnstəns/", example: "For instance, we could go by train."},
+                {word: "such as", translation: "tales como", pronunciation: "/sʌtʃ æz/", example: "I like fruits such as apples and oranges."},
+                {word: "like", translation: "como", pronunciation: "/laɪk/", example: "She sings like a professional."}
+            ],
+            opinion: [
+                {word: "in my opinion", translation: "en mi opinión", pronunciation: "/ɪn maɪ əˈpɪnjən/", example: "In my opinion, this is the best option."},
+                {word: "I think", translation: "yo pienso/creo", pronunciation: "/aɪ θɪŋk/", example: "I think we should wait."},
+                {word: "I believe", translation: "yo creo", pronunciation: "/aɪ bɪˈliːv/", example: "I believe he is right."},
+                {word: "from my point of view", translation: "desde mi punto de vista", pronunciation: "/frɒm maɪ pɔɪnt ɒv vjuː/", example: "From my point of view, this is wrong."}
+            ],
+            summary: [
+                {word: "in conclusion", translation: "en conclusión", pronunciation: "/ɪn kənˈkluːʒn/", example: "In conclusion, education is essential."},
+                {word: "to sum up", translation: "en resumen", pronunciation: "/tuː sʌm ʌp/", example: "To sum up, we had a great time."},
+                {word: "in summary", translation: "en resumen", pronunciation: "/ɪn ˈsʌməri/", example: "In summary, the plan was successful."},
+                {word: "all in all", translation: "en general, en conjunto", pronunciation: "/ɔːl ɪn ɔːl/", example: "All in all, it was a good decision."}
+            ]
+        };
+
+        // Vocabulario de Resolución de Conflictos
+        const conflictVocabulary = [
+            {word: "conflict", translation: "conflicto", pronunciation: "/ˈkɒnflɪkt/"},
+            {word: "argument", translation: "discusión, argumento", pronunciation: "/ˈɑːrɡjumənt/"},
+            {word: "disagreement", translation: "desacuerdo", pronunciation: "/ˌdɪsəˈɡriːmənt/"},
+            {word: "misunderstanding", translation: "malentendido", pronunciation: "/ˌmɪsʌndərˈstændɪŋ/"},
+            {word: "compromise", translation: "compromiso, acuerdo", pronunciation: "/ˈkɒmprəmaɪz/"},
+            {word: "negotiation", translation: "negociación", pronunciation: "/nɪˌɡoʊʃiˈeɪʃn/"},
+            {word: "solution", translation: "solución", pronunciation: "/səˈluːʃn/"},
+            {word: "agreement", translation: "acuerdo", pronunciation: "/əˈɡriːmənt/"},
+            {word: "apologize", translation: "disculparse", pronunciation: "/əˈpɒlədʒaɪz/"},
+            {word: "forgive", translation: "perdonar", pronunciation: "/fərˈɡɪv/"},
+            {word: "listen", translation: "escuchar", pronunciation: "/ˈlɪsn/"},
+            {word: "respect", translation: "respetar", pronunciation: "/rɪˈspekt/"},
+            {word: "cooperate", translation: "cooperar", pronunciation: "/koʊˈɒpəreɪt/"},
+            {word: "mediate", translation: "mediar", pronunciation: "/ˈmiːdieɪt/"},
+            {word: "calm down", translation: "calmarse", pronunciation: "/kɑːm daʊn/"},
+            {word: "talk it out", translation: "hablarlo", pronunciation: "/tɔːk ɪt aʊt/"},
+            {word: "reach consensus", translation: "llegar a un consenso", pronunciation: "/riːtʃ kənˈsensəs/"},
+            {word: "bullying", translation: "acoso escolar", pronunciation: "/ˈbʊliɪŋ/"},
+            {word: "harassment", translation: "hostigamiento", pronunciation: "/həˈræsmənt/"},
+            {word: "peaceful", translation: "pacífico", pronunciation: "/ˈpiːsfl/"},
+            {word: "tolerance", translation: "tolerancia", pronunciation: "/ˈtɒlərəns/"},
+            {word: "empathy", translation: "empatía", pronunciation: "/ˈempəθi/"},
+            {word: "patience", translation: "paciencia", pronunciation: "/ˈpeɪʃns/"},
+            {word: "fairness", translation: "equidad, justicia", pronunciation: "/ˈfernəs/"},
+            {word: "teamwork", translation: "trabajo en equipo", pronunciation: "/ˈtiːmwɜːrk/"},
+            {word: "communication", translation: "comunicación", pronunciation: "/kəˌmjuːnɪˈkeɪʃn/"},
+            {word: "problem-solving", translation: "resolución de problemas", pronunciation: "/ˈprɒbləm sɒlvɪŋ/"},
+            {word: "peer pressure", translation: "presión de grupo", pronunciation: "/pɪr ˈpreʃər/"},
+            {word: "conflict resolution", translation: "resolución de conflictos", pronunciation: "/ˈkɒnflɪkt ˌrezəˈluːʃn/"},
+            {word: "classroom management", translation: "gestión del aula", pronunciation: "/ˈklɑːsruːm ˈmænɪdʒmənt/"}
+        ];
+
+        // Preguntas para práctica
+        const questions = [
+            {q: "¿Qué conector usamos para añadir información?", opts: ["however", "in addition", "because", "although"], answer: "in addition", audio: "We use in addition to add more information."},
+            {q: "¿Cuál es la traducción de 'however'?", opts: ["por lo tanto", "sin embargo", "además", "por ejemplo"], answer: "sin embargo", audio: "However means sin embargo."},
+            {q: "¿Qué conector indica secuencia o orden?", opts: ["finally", "although", "because", "for example"], answer: "finally", audio: "Finally indicates the last step in a sequence."},
+            {q: "¿Cuál conector usamos para dar una opinión?", opts: ["in my opinion", "as a result", "then", "but"], answer: "in my opinion", audio: "We use in my opinion to express our point of view."},
+            {q: "¿Qué significa 'therefore'?", opts: ["por lo tanto", "sin embargo", "además", "por ejemplo"], answer: "por lo tanto", audio: "Therefore means por lo tanto or for that reason."},
+            {q: "¿Cuál conector usamos para dar un ejemplo?", opts: ["for example", "however", "therefore", "finally"], answer: "for example", audio: "We use for example to introduce an example."},
+            {q: "¿Qué conector indica contraste o diferencia?", opts: ["and", "but", "also", "in addition"], answer: "but", audio: "But is used to show contrast between two ideas."},
+            {q: "¿Cuál es la pronunciación de 'although'?", opts: ["/ɔːlˈðoʊ/", "/ˈɔːlsoʊ/", "/ˈæftər/", "/ˈðerfɔːr/"], answer: "/ɔːlˈðoʊ/", audio: "Although is pronounced as although."},
+            {q: "¿Qué significa 'to sum up'?", opts: ["en resumen", "por otro lado", "en conclusión", "ambas a y c"], answer: "ambas a y c", audio: "To sum up means in summary or in conclusion."},
+            {q: "¿Cuál conector usamos para explicar una causa?", opts: ["so", "because", "therefore", "however"], answer: "because", audio: "We use because to explain the reason or cause."},
+            {q: "¿Qué significa 'misunderstanding'?", opts: ["acuerdo", "malentendido", "discusión", "solución"], answer: "malentendido", audio: "Misunderstanding means a failure to understand something correctly."},
+            {q: "¿Cuál es la traducción de 'compromise'?", opts: ["conflicto", "compromiso/acuerdo", "negociación", "discusión"], answer: "compromiso/acuerdo", audio: "Compromise means an agreement reached by each side making concessions."},
+            {q: "¿Qué significa 'empathy'?", opts: ["paciencia", "tolerancia", "empatía", "justicia"], answer: "empatía", audio: "Empathy is the ability to understand and share the feelings of another."},
+            {q: "¿Cuál palabra significa 'acoso escolar'?", opts: ["harassment", "bullying", "conflict", "argument"], answer: "bullying", audio: "Bullying means using strength to frighten or hurt weaker people."},
+            {q: "¿Qué es 'conflict resolution'?", opts: ["resolución de conflictos", "gestión del aula", "trabajo en equipo", "presión de grupo"], answer: "resolución de conflictos", audio: "Conflict resolution is the process of resolving a dispute or conflict."},
+            {q: "¿Cuál conector usarías para conectar: 'Estudié mucho ___ aprobé el examen'?", opts: ["however", "therefore", "although", "but"], answer: "therefore", audio: "We use therefore to show that the second sentence is a result of the first."},
+            {q: "¿Qué conector NO es de adición?", opts: ["furthermore", "moreover", "however", "in addition"], answer: "however", audio: "However is a contrast connector, not an addition connector."},
+            {q: "¿Cuál es el orden correcto de conectores de secuencia?", opts: ["first, then, finally", "finally, first, then", "then, first, finally", "first, finally, then"], answer: "first, then, finally", audio: "The correct sequence is first, then, next, finally."},
+            {q: "¿Qué significa 'mediate'?", opts: ["disculparse", "mediar", "perdonar", "cooperar"], answer: "mediar", audio: "To mediate means to intervene between parties in a dispute to bring about an agreement."},
+            {q: "¿Cuál conector formal usamos para 'así que'?", opts: ["so", "therefore", "because", "but"], answer: "therefore", audio: "Therefore is the formal equivalent of so."}
+        ];
+
+        let currentQuestion = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let answered = false;
+        let currentCorrectIndex = -1;
+
+        // --- MOTOR DE AUDIO ---
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            
+            const avatar = document.getElementById('jorge-avatar');
+            if (avatar) {
+                utterance.onstart = () => avatar.classList.add('talking');
+                utterance.onend = () => avatar.classList.remove('talking');
+            }
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function showMenu() {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('linkers-screen').style.display = 'none';
+            document.getElementById('vocabulary-screen').style.display = 'none';
+            document.getElementById('composition-screen').style.display = 'none';
+            document.getElementById('practice-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('menu-screen').style.display = 'block';
+            
+            speak("Welcome! Choose what you want to learn today.");
+        }
+
+        function showLinkers() {
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('linkers-screen').style.display = 'block';
+            showLinkerType('sequence');
+            speak("Let's learn linking words. These connectors help us organize our ideas.");
+        }
+
+        function showLinkerType(type) {
+            // Actualizar tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const typeNames = ['sequence', 'addition', 'contrast', 'reason', 'result', 'example', 'opinion', 'summary'];
+            const index = typeNames.indexOf(type);
+            if (index !== -1) tabs[index].classList.add('active');
+            
+            // Mostrar contenido
+            const content = document.getElementById('linkers-content');
+            content.innerHTML = '';
+            
+            const linkers = linkingWords[type];
+            linkers.forEach(linker => {
+                const card = document.createElement('div');
+                card.className = 'linker-card';
+                card.innerHTML = `
+                    <span class="category-badge">${type.toUpperCase()}</span>
+                    <div class="linker-word" onclick="speak('${linker.word}')">🔊 ${linker.word}</div>
+                    <div class="linker-translation">🇪🇸 ${linker.translation}</div>
+                    <div class="linker-pronunciation">🎧 ${linker.pronunciation}</div>
+                    <div class="linker-example">"${linker.example}"</div>
+                `;
+                content.appendChild(card);
+            });
+            
+            speak(`Here are the ${type} connectors. Click on the speaker to hear the pronunciation.`);
+        }
+
+        function showVocabulary() {
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('vocabulary-screen').style.display = 'block';
+            
+            const content = document.getElementById('vocabulary-content');
+            content.innerHTML = '';
+            
+            conflictVocabulary.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'vocab-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="vocab-word" onclick="speak('${item.word}')">🔊 ${item.word}</div>
+                        <div style="color: #667eea; font-size: 13px; font-family: monospace;">${item.pronunciation}</div>
+                    </div>
+                    <div class="vocab-meaning">${item.translation}</div>
+                `;
+                content.appendChild(card);
+            });
+            
+            speak("Here is vocabulary for conflict resolution in the classroom. These words will help you solve problems peacefully.");
+        }
+
+        function showComposition() {
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('composition-screen').style.display = 'block';
+            speak("A composition is an organized text that expresses ideas. Let me explain with an example.");
+        }
+
+        function startPractice() {
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('practice-screen').style.display = 'block';
+            currentQuestion = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            document.getElementById('correct-count').textContent = '0';
+            document.getElementById('incorrect-count').textContent = '0';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            const container = document.getElementById('question-container');
+            
+            // Barajar opciones
+            let optionsWithCorrectFlag = q.opts.map(opt => ({
+                text: opt,
+                isCorrect: opt === q.answer
+            }));
+
+            for (let i = optionsWithCorrectFlag.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [optionsWithCorrectFlag[i], optionsWithCorrectFlag[j]] = [optionsWithCorrectFlag[j], optionsWithCorrectFlag[i]];
+            }
+            
+            currentCorrectIndex = optionsWithCorrectFlag.findIndex(opt => opt.isCorrect);
+            
+            container.innerHTML = `
+                <div class="question-audio" onclick="speak(questions[currentQuestion].audio)">
+                    <p>🎧 <strong>Jorge dice:</strong> (Haz clic para escuchar la pista)</p>
+                </div>
+                <div style="font-size:1.2rem; margin-bottom:20px; font-weight: 600; color: #334155;">${q.q}</div>
+                <div id="options-list"></div>
+                <div class="feedback" id="feedback"></div>
+            `;
+            
+            optionsWithCorrectFlag.forEach((opt, i) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = opt.text;
+                div.onclick = () => selectAnswer(i);
+                document.getElementById('options-list').appendChild(div);
+            });
+            
+            speak(q.audio);
+            document.getElementById('progress').textContent = `Pregunta ${currentQuestion + 1} de ${questions.length}`;
+            updateProgressBar();
+            document.getElementById('next-btn').style.display = 'none';
+        }
+        
+        function updateProgressBar() {
+            const progressPercent = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+        }
+
+        function selectAnswer(selected) {
+            if (answered) return;
+            answered = true;
+            
+            const options = document.querySelectorAll('.option');
+            const feedback = document.getElementById('feedback');
+            
+            if (selected === currentCorrectIndex) {
+                options[selected].classList.add('correct');
+                correctCount++;
+                document.getElementById('correct-count').textContent = correctCount;
+                feedback.innerHTML = "✅ ¡Excelente! Respuesta correcta.";
+                feedback.style.backgroundColor = "#dcfce7";
+                feedback.style.color = "#166534";
+                speak("Excellent! That is correct.");
+            } else {
+                options[selected].classList.add('incorrect');
+                options[currentCorrectIndex].classList.add('correct');
+                incorrectCount++;
+                document.getElementById('incorrect-count').textContent = incorrectCount;
+                feedback.innerHTML = "❌ No es correcto. La respuesta correcta está resaltada.";
+                feedback.style.backgroundColor = "#fee2e2";
+                feedback.style.color = "#991b1b";
+                speak("Not quite. Let me explain. The correct answer is " + questions[currentQuestion].answer);
+            }
+            
+            feedback.style.display = 'block';
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+        
+        function showResults() {
+            document.getElementById('practice-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            
+            const percentage = Math.round((correctCount / questions.length) * 100);
+            document.getElementById('final-score').textContent = `${percentage}%`;
+            
+            let message = "";
+            if (percentage >= 90) {
+                message = "¡Excelente trabajo! Dominas los linking words perfectamente.";
+            } else if (percentage >= 70) {
+                message = "¡Buen trabajo! Tienes un buen conocimiento de los conectores.";
+            } else if (percentage >= 50) {
+                message = "Has aprobado, pero te recomiendo repasar la lista de conectores.";
+            } else {
+                message = "Necesitas practicar más. ¡No te rindas, sigue estudiando!";
+            }
+            
+            document.getElementById('result-message').textContent = message;
+            speak("You have finished the practice! " + message);
+        }
+    </script>
+</body>
+</html>
